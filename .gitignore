@@ -1,0 +1,31 @@
+# ==============================
+# Backend Python
+# ==============================
+
+# Environnement virtuel
+backend/venv/
+venv/
+
+# Variables d'environnement (clé OpenAI — NE JAMAIS COMMITTER)
+.env
+backend/.env
+
+# Fichiers Python compilés
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# ==============================
+# Frontend React (pour plus tard)
+# ==============================
+frontend/node_modules/
+frontend/.env.local
+frontend/dist/
+
+# ==============================
+# Éditeurs et système
+# ==============================
+.vscode/
+.DS_Store
+*.log
