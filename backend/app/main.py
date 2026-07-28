@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-from app.routes import upload
+from app.routes import upload, analyze
 import os
 
 load_dotenv()
@@ -12,8 +12,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-app.include_router(upload.router)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -21,6 +19,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.include_router(upload.router)
+app.include_router(analyze.router)
 
 @app.get("/")
 def read_root():
