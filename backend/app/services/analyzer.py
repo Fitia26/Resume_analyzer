@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from openai import AsyncOpenAI, RateLimitError, AuthenticationError
 from fastapi import HTTPException
 from dotenv import load_dotenv
@@ -50,14 +51,19 @@ async def analyze_resume(text: str) -> dict:
         response = await client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},  # instructions
+                {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": f"Here is the CV to analyze:\n\n{text}"} # the CV text
             ],
             temperature=0.3
         )
             
-        result = response.choices[0].message.content
-        data= json.loads(result)
+        raw = response.choices[0].message.content
+        raw = re.sub(r"```json\s*", "", raw)
+        raw = re.sub(r"```\s*", "", raw)
+        raw = raw.strip()
+        
+        data= json.loads(raw)
+
         return data
     except RateLimitError:
         raise HTTPException(

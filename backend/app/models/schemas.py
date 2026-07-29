@@ -31,9 +31,9 @@ class ResumeStats(BaseModel):
 class MatchResult(BaseModel):
     match_score: int
     job_title: str
-    missing_skills: list[str]
     matching_skills: list[str]
-
+    missing_skills: list[str]
+    
 # Main response model for the resume analysis output.
 class AnalysisResult(BaseModel):
     overall_score: int

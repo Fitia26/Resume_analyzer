@@ -34,11 +34,11 @@ async def match_job(cv_text: str, job_description: str) -> dict:
     # To complete
     try:
         user_message = f"""
-                Here is the CV:
-                {cv_text}
-                Here is the job description:
-                {job_description}
-            """
+            Here is the CV:
+            {cv_text}
+            Here is the job description:
+            {job_description}
+        """
         response = await client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[

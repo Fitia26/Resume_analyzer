@@ -1,5 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 from app.routes import upload, analyze, match
 import os
@@ -20,11 +21,19 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(upload.router)
-app.include_router(analyze.router)
-app.include_router(match.router)
+# Global error handler — catches all unhandled exceptions
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Unexpected error: {str(exc)}"}
+    )
 
-@app.get("/")
+app.include_router(upload.router, prefix="/api", tags=["Upload"])
+app.include_router(analyze.router, prefix="/api", tags=["Analysis"])
+app.include_router(match.router, prefix="/api", tags=["Matching"])
+
+@app.get("/",tags=["General"])
 def read_root():
     return {
         "message": "Bienvenue sur AI Resume Analyzer API 🚀",
@@ -33,7 +42,7 @@ def read_root():
         "docs": "http://localhost:8000/docs"
     }
 
-@app.get("/health")
+@app.get("/health", tags=["General"])
 def health_check():
     openai_key = os.getenv("OPENAI_API_KEY")
     return {

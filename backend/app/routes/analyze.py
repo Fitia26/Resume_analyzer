@@ -25,4 +25,4 @@ async def analyze(request: AnalyzeRequest):
 
     
     result = await analyze_resume(request.text)
-    return result
+    return result 
