@@ -1,0 +1,44 @@
+/* Import Google Font Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* CSS Variables — palette violette */
+:root {
+  --v50:  #F5F3FF;
+  --v100: #EDE9FE;
+  --v200: #DDD6FE;
+  --v300: #C4B5FD;
+  --v400: #A78BFA;
+  --v500: #8B5CF6;
+  --v600: #7C3AED;
+  --v700: #6D28D9;
+  --v800: #5B21B6;
+  --v900: #4C1D95;
+
+  --success: #16A34A;
+  --success-bg: #F0FDF4;
+  --warning: #D97706;
+  --warning-bg: #FFFBEB;
+  --danger: #DC2626;
+  --danger-bg: #FEF2F2;
+
+  --ink: #1E1B4B;
+  --ink2: #4C1D95;
+  --bg: #F5F3FF;
+  --card: #FFFFFF;
+  --border: #DDD6FE;
+
+  --yellow: #FACC15;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
