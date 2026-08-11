@@ -1,41 +1,21 @@
 import FeedbackPanel from "../components/FeedbackPanel"
 import SkillsPanel from "../components/SkillsPanel"
 import ScoreRing from "../components/ScoreRing"
+import useResumeStore from "../store/resumeStore"
 
 function ResultsPage() {
-  const fakeData = {
-    overall_score: 74,
-    score_label: "Good profile",
-    axes: {
-      clarity: 82,
-      skills: 70,
-      experience: 78,
-      impact: 58
-    },
-    skills: {
-      hard_skills: ["React", "FastAPI", "Python"],
-      soft_skills: ["Leadership", "Communication"],
-      languages: ["French — Native", "English — B2"]
-    },
-    feedback: [
-      { text: "Strong technical stack", type: "strength" },
-      { text: "Quantify your results", type: "improvement" },
-      { text: "No Docker experience visible", type: "critical" }
-    ],
-    stats: {
-      ats_score: "High",
-      pages: 1,
-      word_count: 487,
-      reading_time: "~45 sec",
-      skills_count: 20
-    },
-    match: {
-      match_score: 72,
-      job_title: "Full Stack Developer",
-      missing_skills: ["Docker", "GraphQL"],
-      matching_skills: ["React", "Python"]
-    }
+  const { result, isLoading, error } = useResumeStore()
+
+  // If there is no result yet, redirect back to upload
+  if (!result) {
+    return (
+      <div style={{ textAlign: 'center', padding: '80px' }}>
+        <p>No results yet.</p>
+        <a href="/">Upload a resume first</a>
+      </div>
+    )
   }
+
 
 
   return (
@@ -45,8 +25,8 @@ function ResultsPage() {
           <div className="card">
             <div className="card-label">Overall score</div>
             <ScoreRing
-              score={fakeData.overall_score}
-              label={fakeData.score_label}
+              score={result.overall_score}
+              label={result.score_label}
             />
             
             <div className="axes">
@@ -55,10 +35,10 @@ function ResultsPage() {
                 <div className="axis-track">
                   <div
                     className="axis-fill"
-                    style={{ width: `${fakeData.axes.clarity}%` }}
+                    style={{ width: `${result.axes.clarity}%` }}
                   />
                 </div>
-                <span className="axis-value">{fakeData.axes.clarity}</span>
+                <span className="axis-value">{result.axes.clarity}</span>
               </div>
               
               <div className="axis">
@@ -66,10 +46,10 @@ function ResultsPage() {
                 <div className="axis-track">
                   <div
                     className="axis-fill"
-                    style={{ width: `${fakeData.axes.skills}%` }}
+                    style={{ width: `${result.axes.skills}%` }}
                   />
                 </div>
-                <span className="axis-value">{fakeData.axes.skills}</span>
+                <span className="axis-value">{result.axes.skills}</span>
               </div>
 
               <div className="axis">
@@ -77,41 +57,41 @@ function ResultsPage() {
                 <div className="axis-track">
                   <div
                     className="axis-fill"
-                    style={{ width: `${fakeData.axes.experience}%` }}
+                    style={{ width: `${result.axes.experience}%` }}
                   />
                 </div>
-                <span className="axis-value">{fakeData.axes.experience}</span>
+                <span className="axis-value">{result.axes.experience}</span>
               </div>
 
               <div className="axis">
                 <span className="axis-name">Impact</span>
                 <div className="axis-track">
                   <div
-                    className={`axis-fill ${fakeData.axes.impact < 65 ? 'warning' : ''}`}
-                    style={{ width: `${fakeData.axes.impact}%` }}
+                    className={`axis-fill ${result.axes.impact < 65 ? 'warning' : ''}`}
+                    style={{ width: `${result.axes.impact}%` }}
                   />
                 </div>
-                <span className="axis-value">{fakeData.axes.impact}</span>
+                <span className="axis-value">{result.axes.impact}</span>
               </div>
-              {/* impact < 65 → ajoute la classe "warning" sur axis-fill */}
+              {/* impact < 65 → add the "warning" class to axis-fill */}
             </div>
           </div>
 
 
-          <div className="card">
+          {result.match && <div className="card">
             <div className="card-label">Job match</div>
 
-            {/* Score en grand — ex: 72% */}
-            <div className="match-score">{fakeData.match.match_score}%</div>
+            {/* Large score — e.g. 72% */}
+            <div className="match-score">{result.match.match_score}%</div>
 
-            {/* Titre du poste */}
-            <div className="match-title">{fakeData.match.job_title}</div>
+            {/* Job title */}
+            <div className="match-title">{result.match.job_title}</div>
 
-            {/* Barre de progression */}
+            {/* Progress bar */}
             <div className="match-bar-track">
               <div
                 className="match-bar-fill"
-                style={{ width: `${fakeData.match.match_score}%` }}
+                style={{ width: `${result.match.match_score}%` }}
               >
               </div>
             </div>
@@ -121,12 +101,12 @@ function ResultsPage() {
 
             {/* Missing skills chips */}
             <div className="match-missing-chips">
-              {fakeData.match.missing_skills.map(skill => (
+              {result.match.missing_skills.map(skill => (
                 <span key={skill} className="missing-chip">{skill}</span>
               ))}
             </div>
 
-          </div>
+          </div>}
 
 
           <div className="card">
@@ -135,27 +115,27 @@ function ResultsPage() {
 
               <div className="stat-row">
                 <span className="stat-key">ATS score</span>
-                <span className="stat-value green">{fakeData.stats.ats_score}</span>
+                <span className="stat-value green">{result.stats.ats_score}</span>
               </div>
 
               <div className="stat-row">
                 <span className="stat-key">Pages</span>
-                <span className="stat-value">{fakeData.stats.pages}</span>
+                <span className="stat-value">{result.stats.pages}</span>
               </div>
 
               <div className="stat-row">
                 <span className="stat-key">Word count</span>
-                <span className="stat-value">{fakeData.stats.word_count}</span>
+                <span className="stat-value">{result.stats.word_count}</span>
               </div>
 
               <div className="stat-row">
                 <span className="stat-key">Reading time</span>
-                <span className="stat-value">{fakeData.stats.reading_time}</span>
+                <span className="stat-value">{result.stats.reading_time}</span>
               </div>
 
               <div className="stat-row">
                 <span className="stat-key">Skills found</span>
-                <span className="stat-value purple">{fakeData.stats.skills_count}</span>
+                <span className="stat-value purple">{result.stats.skills_count}</span>
               </div>
 
             </div>
@@ -164,9 +144,9 @@ function ResultsPage() {
 
         </div>
 
-        <div className="results-col">  {/* colonne droite */}
-          <SkillsPanel skills={fakeData.skills}/>
-          <FeedbackPanel feedback={fakeData.feedback}/>
+        <div className="results-col">  {/* right column */}
+          <SkillsPanel skills={result.skills}/>
+          <FeedbackPanel feedback={result.feedback}/>
         </div>
       </div>
 

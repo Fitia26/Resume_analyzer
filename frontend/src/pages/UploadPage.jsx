@@ -1,16 +1,48 @@
 import { useState } from "react"
 import { useNavigate } from 'react-router-dom'
 import UploadZone from '../components/UploadZone'
+import useResumeStore from "../store/resumeStore"
+import { uploadResume, analyzeResume, matchJob } from "../services/api"
 
 function UploadPage() {
   const [file, setFile] = useState(null)
   const [jobDescription, setJobDescription] = useState("")
+  const { setResult, setLoading, setError } = useResumeStore()
+
   const navigate = useNavigate()
-  const handleAnalyze = () => {
+
+  const handleAnalyze = async () => {
     // Do nothing if no file
     if (!file) return
     // Navigate to results — we will call the API here
-    navigate('/results')
+    setLoading(true)
+    setError(null)
+    try {
+      // Step 1 — upload the file
+      const uploadData = await uploadResume(file)
+
+      // Step 2 — analyze the text
+      const analysisData = await analyzeResume(uploadData.text)
+
+      // Step 3 — match if job description is present
+      let matchData = null
+      if (jobDescription.trim()) {
+        matchData = await matchJob(uploadData.text, jobDescription)
+      }
+       // Step 4 — store the results
+      setResult({
+        ...analysisData,
+        match: matchData
+      })
+
+      // Step 5 — navigate to results
+      navigate('/results')
+
+    } catch (err) {
+        setError(err.response?.data?.detail || 'An error occurred')
+      } finally {
+        setLoading(false)
+      }
   }
   return (
    <div className="upload-page">
